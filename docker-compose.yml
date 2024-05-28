@@ -1,0 +1,22 @@
+version: "3.8"
+services:
+  med-db:
+    image: postgres:16-alpine
+    restart: on-failure
+    environment:
+      POSTGRES_DB: med-db
+      POSTGRES_USER: sanity
+      POSTGRES_PASSWORD: wordpass
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - med.data:/var/lib/postgresql/data
+#      - ./config/postgres/order_init.sql:/docker-entrypoint-initdb.d/order_init.sql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -d $${POSTGRES_DB} -U $${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 60s
+      retries: 5
+      start_period: 10s
+volumes:
+  med.data: { }
