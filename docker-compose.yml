@@ -2,6 +2,7 @@ version: "3.8"
 services:
   med-db:
     image: postgres:16-alpine
+    hostname: med-db
     restart: on-failure
     environment:
       POSTGRES_DB: med-db
@@ -18,5 +19,12 @@ services:
       timeout: 60s
       retries: 5
       start_period: 10s
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
 volumes:
   med.data: { }
