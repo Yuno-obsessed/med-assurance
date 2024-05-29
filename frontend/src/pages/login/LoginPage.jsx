@@ -2,15 +2,16 @@ import React, {useEffect, useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import fetchWrapper from "../../api/middleware/auth";
-import useUserStore from "../../store";
+import {useUserStore} from "../../store/user";
 import FloatingErrorMessage from "../../component/ErrorMessage";
+import {useAuthStore} from "../../store/auth";
 
 const PageContainer = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #6e8efb, #a777e3);
+    bfackground: #f9f9f9;
 `;
 
 const LoginContainer = styled.div`
@@ -65,76 +66,41 @@ const SubmitButton = styled.button`
 `;
 
 const LoginPage = () => {
-    const {userData, setUserData} = useUserStore();
+    const {setToken, login, token} = useAuthStore()
+    const {getUserData} = useUserStore()
+    const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const navigate = useNavigate();
-    useEffect(() => {
-        setEmail('');
-        setPassword('');
-    }, []);
     const [isErrorVisible, setIsErrorVisible] = useState(false);
 
     const handleErrorClose = () => {
         setIsErrorVisible(false);
     };
 
+    useEffect(() => {
+        checkUser();
+        setEmail('');
+        setPassword('');
+    }, []);
+
+    const checkUser = async () => {
+        getUserData().then((response) => {
+            if (response) {
+                navigate('/')
+            }
+        })
+    }
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
-        await fetch('http://localhost:8080/api/v1/med-ass/login', {
-            method: 'POST',
-            body: JSON.stringify({
-                email: email,
-                password: password
-            }),
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        }).then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
+        login(email, password).then((response) => {
+            if (!response) {
+                setIsErrorVisible(true);
+            } else {
+                checkUser();
             }
-            return response.json();
-        }).then(data => {
-            console.log(data);
-            const err = data.error;
-            switch (err) {
-                case "WRONG_PASSWORD":
-                    alert("Wrong password");
-                    break;
-                case "NO_SUCH_USER":
-                    alert("No user with such email found");
-                    break;
-            }
-            const token = data.access_token;
-            localStorage.setItem('access_token', token);
-            const fetchUserData = async () => {
-                try {
-                    if (token) {
-                        const data = await fetchWrapper('http://localhost:8080/api/v1/med-ass/access', {
-                            method: 'GET',
-                        });
-                        if (data) {
-                            console.log(data);
-                            setUserData(data);
-                        } else {
-                            console.error('Failed to fetch user data');
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error fetching user data:', error);
-                }
-            };
-            setUserData(fetchUserData());
-            navigate('/');
-        }).catch(error => {
-            console.error('There was a problem with the fetch operation:', error);
-        });
-
+        })
     };
-
     return (
         <PageContainer>
             <LoginContainer>

@@ -3,6 +3,7 @@ import './AssurancesPage.css';
 import Header from "../../component/Header";
 import fetchWrapper from "../../api/middleware/auth";
 import FloatingErrorMessage from "../../component/ErrorMessage";
+import {Link} from "react-router-dom";
 
 
 const AssurancesPage = () => {
@@ -84,15 +85,7 @@ const AssurancesPage = () => {
     };
     return (
         <div className="assurance-page">
-            <aside className="sidebar">
-                <h1>Medical Assurance</h1>
-                <nav>
-                    <ul>
-                        <li><a href = "/">Assurance</a></li>
-                        <li><a href = "/refund">Refunds</a></li>
-                    </ul>
-                </nav>
-            </aside>
+
             <main className="main-content">
                 <Header></Header>
                 <div className="filters">

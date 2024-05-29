@@ -1,30 +1,30 @@
-
 const fetchWrapper = async (url, options = {}) => {
     const token = localStorage.getItem('access_token');
-
-    const headers = {
-        'Content-Type': 'application/json',
-        ...options.headers,
-    };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    } else {
-        throw new Error("No auth token set in local storage.")
-    }
+    if (!token) throw new Error("No auth token set in local storage.");
 
     const response = await fetch(url, {
         ...options,
-        headers,
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+            ...options.headers,
+        },
     });
 
-    if (!response.ok) {
-        // Handle HTTP errors
-        const error = await response.json();
-        throw new Error(error.message);
+    let jsonResponse;
+    try {
+        jsonResponse = await response.json();
+    } catch (error) {
+        console.error("Failed to parse JSON response:", error);
+        throw new Error("Failed to parse JSON response");
     }
 
-    return response.json();
+    if (!response.ok) {
+        console.error("Response error:", jsonResponse.message);
+        throw new Error(jsonResponse.message || "Error in response");
+    }
+
+    return jsonResponse;
 };
 
 export default fetchWrapper;

@@ -1,10 +1,8 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import styled from 'styled-components';
 import fetchWrapper from "../../api/middleware/auth";
-import useUserStore from "../../store";
 
 const Container = styled.div`
   display: flex;

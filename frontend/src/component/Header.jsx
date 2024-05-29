@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useUserStore from "../store";
-import fetchWrapper from "../api/middleware/auth";
+import {useUserStore} from "../store/user";
 
 import styled from 'styled-components';
 

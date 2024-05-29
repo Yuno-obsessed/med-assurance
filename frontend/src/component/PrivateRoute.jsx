@@ -1,6 +1,6 @@
 import React from 'react';
 import {Navigate, Outlet} from 'react-router-dom';
-import useUserStore from '../store'; // Adjust the path based on your project structure
+import {useUserStore} from '../store/user'; // Adjust the path based on your project structure
 
 const PrivateRoute = () => {
     const { userData } = useUserStore();
