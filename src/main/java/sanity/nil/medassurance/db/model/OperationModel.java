@@ -2,12 +2,10 @@ package sanity.nil.medassurance.db.model;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import sanity.nil.medassurance.dto.OperationCardDTO;
 
-import java.util.Set;
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -15,8 +13,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "structures")
-public class StructureModel {
+@Table(name = "operations")
+public class OperationModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,8 +23,4 @@ public class StructureModel {
 
     @Column(name = "name")
     private String name;
-
-    @Column(name = "address")
-    private String address;
-
 }

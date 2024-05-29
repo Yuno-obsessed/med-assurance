@@ -6,6 +6,7 @@ import AssurancesPage from "./pages/assurance/AssurancesPage";
 import useUserStore from "./store";
 import PrivateRoute from "./component/PrivateRoute";
 import RegisterPage from "./pages/register/RegisterPage";
+import OperationsPage from "./pages/operation/OperationsPage";
 
 const App = () => {
     return (
