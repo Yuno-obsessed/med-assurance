@@ -72,6 +72,7 @@ const LoginPage = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [isErrorVisible, setIsErrorVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const handleErrorClose = () => {
         setIsErrorVisible(false);
@@ -94,7 +95,8 @@ const LoginPage = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
         login(email, password).then((response) => {
-            if (!response) {
+            if (response.error) {
+                setErrorMessage(response.error)
                 setIsErrorVisible(true);
             } else {
                 checkUser();
@@ -129,7 +131,7 @@ const LoginPage = () => {
             </LoginContainer>
             {isErrorVisible && (
                 <FloatingErrorMessage
-                    message="An error occurred! Please try again."
+                    message={errorMessage}
                     onClose={handleErrorClose}
                 />
             )}

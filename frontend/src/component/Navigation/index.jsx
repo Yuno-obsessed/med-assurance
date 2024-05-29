@@ -1,7 +1,9 @@
 import {Link} from "react-router-dom";
 import React from "react";
+import {useAuthStore} from "../../store/auth";
 
 export const Navigation = () => {
+
     return (
         <aside className="sidebar">
             <h1>Medical Assurance</h1>

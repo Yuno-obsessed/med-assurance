@@ -7,13 +7,17 @@ import {Navigate, Route, Routes} from "react-router-dom";
 import {Navigation} from "./component/Navigation";
 import {RefundPage} from "./pages/refund/RefundPage";
 import OperationsPage from "./pages/operation/OperationsPage";
+import {useAuthStore} from "./store/auth";
 
 const App = () => {
+    const {isAuth} = useAuthStore();
     return (
         <div style={{
             display: "flex",
         }}>
-        <Navigation/>
+            {isAuth && (
+                <Navigation/>
+            )}
             <div style={{
                 width: "100%",
             }}>
