@@ -66,7 +66,7 @@ const SubmitButton = styled.button`
 `;
 
 const LoginPage = () => {
-    const {setToken, login, token} = useAuthStore()
+    const {setIsAuth, login , token} = useAuthStore()
     const {getUserData} = useUserStore()
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
@@ -79,7 +79,7 @@ const LoginPage = () => {
     };
 
     useEffect(() => {
-        checkUser();
+        checkUser()
         setEmail('');
         setPassword('');
     }, []);
@@ -87,6 +87,7 @@ const LoginPage = () => {
     const checkUser = async () => {
         getUserData().then((response) => {
             if (response) {
+                setIsAuth();
                 navigate('/')
             }
         })

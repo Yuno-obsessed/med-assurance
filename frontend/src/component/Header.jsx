@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import {useUserStore} from "../store/user";
 
 import styled from 'styled-components';
+import {useAuthStore} from "../store/auth";
 
 const HeaderContainer = styled.header`
     margin-bottom: 20px;
@@ -52,29 +53,7 @@ const LoadingMessage = styled.div`
 
 const Header = () => {
     const {userData, setUserData} = useUserStore();
-
-    useEffect(() => {
-        // const fetchUserData = async () => {
-        //     try {
-        //         const token = localStorage.getItem("access_token");
-        //         if (token) {
-        //             const data = await fetchWrapper('http://localhost:8080/api/v1/med-ass/access', {
-        //                 method: 'GET',
-        //             });
-        //             if (data) {
-        //                 console.log(data);
-        //                 setUserData(data);
-        //             } else {
-        //                 console.error('Failed to fetch user data');
-        //             }
-        //         }
-        //     } catch (error) {
-        //         console.error('Error fetching user data:', error);
-        //     }
-        // };
-        //
-        // fetchUserData();
-    }, [setUserData]);
+    const {removeToken} = useAuthStore();
 
     return (
         <HeaderContainer>
@@ -86,6 +65,10 @@ const Header = () => {
                         <UserName>{userData.name}</UserName>
                         <UserEmail>{userData.email}</UserEmail>
                     </UserData>
+                    <button onClick={() => {
+                        removeToken()
+                        window.location.reload()
+                    }}>LOGOUT</button>
                 </UserInfo>
             ) : (
                 <LoadingMessage>Loading user data...</LoadingMessage>

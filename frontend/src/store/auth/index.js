@@ -15,7 +15,6 @@ export const useAuthStore = create((set) => (
             })
             if (response.ok) {
                 const data = await response.json()
-                console.log(data)
                 localStorage.setItem('access_token', data.access_token)
                 set({token: data.access_token, isAuth: true})
                 if (data.error) {
@@ -27,6 +26,10 @@ export const useAuthStore = create((set) => (
                 return null;
             }
         },
-        removeToken: () => set({token: null})
+        setIsAuth: () => set({isAuth: true}),
+        removeToken: () => {
+            localStorage.removeItem('access_token')
+            set({token: null})
+        },
     }
 ))

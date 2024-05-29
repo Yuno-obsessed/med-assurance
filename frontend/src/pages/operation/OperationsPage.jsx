@@ -4,6 +4,7 @@ import Header from "../../component/Header";
 import fetchWrapper from "../../api/middleware/auth";
 import FloatingErrorMessage from "../../component/ErrorMessage";
 import {Link} from "react-router-dom";
+import {Pagination} from "../../component/Pagination/inedx";
 
 
 const OperationsPage = () => {
@@ -12,39 +13,19 @@ const OperationsPage = () => {
     const [operationName, setOperationName] = useState('');
     const [offset, setOffset] = useState(0);
     const [limit, setLimit] = useState(10);
+    const [isErrorVisible, setIsErrorVisible] = useState(false);
     const [operations, setOperations] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    useEffect(() => {
-        const fetchOperations = async () => {
-            try {
-                const data = await fetchWrapper(`http://localhost:8080/api/v1/med-ass/operation/search?doctorName=${doctorName}&structureName=${structureName}&operationName=${operationName}`);
-                setOperations(data);
-            } catch (error) {
-                setIsErrorVisible(true);
-                console.error('Error fetching operations:', error);
-            }
-        };
-        fetchOperations();
-    }, []);
-
-    const [isErrorVisible, setIsErrorVisible] = useState(false);
-
-    const handleErrorClose = () => {
-        setIsErrorVisible(false);
-    };
-
-    const handleFilterClick = () => {
-        setIsModalOpen(true);
-    };
-
-    const handleCloseModal = () => {
-        setIsModalOpen(false);
-        setStructureName('');
-        setDoctorName('');
-        setOperationName('');
-    };
-
+    const totalOperations = ()  => {
+        if(operations.length < limit){
+            return 1;
+        }else {
+            return operations.length / limit + 1;
+        }
+    }
+   const handleErrorClose = () => {
+        return setIsErrorVisible(false)
+   }
     function constructUrl() {
         let baseUrl = 'http://localhost:8080/api/v1/med-ass/operation/search?';
         if (doctorName) {
@@ -61,31 +42,26 @@ const OperationsPage = () => {
         return baseUrl;
     }
 
-    const handleModalSubmit = async (data) => {
-        data.preventDefault();
-
-        // const response = await fetchWrapper(`http://localhost:8080/api/v1/med-ass/operation/search?doctorName=${doctorName}&structureName=${structureName}&operationName=${operationName}&offset=${offset}&limit=${limit}`, {
-        const response = await fetchWrapper(constructUrl(), {
-            headers: {
-                "Accept": "application/json",
-                "Content-Type": "application/json",
-            },
-        });
-        if (!response) {
-            setIsErrorVisible(true);
-        } else {
-            console.log(response);
-            setOperations(response);
+    const fetchOperation = async () => {
+        const data = await fetchWrapper(constructUrl())
+        if(!data){
+            setIsErrorVisible(true)
         }
-        handleCloseModal();
-    };
+        setOperations(data)
+    }
+    const handleModalSubmit = async () => {
+        fetchOperation()
+    }
 
+    useEffect(() => {
+        fetchOperation()
+    }, [offset])
     return (
         <div className="operations-page">
             <main className="main-content">
-                <Header></Header>
+                <Header/>
                 <div className="filters">
-                    <button className="filter-modal" onClick={handleFilterClick}>Filter</button>
+                    <button className="filter-modal" onClick={() => setIsModalOpen(true)}>Filter</button>
                 </div>
                 <table className="operations-table">
                     <thead>
@@ -121,11 +97,14 @@ const OperationsPage = () => {
                     )}
                     </tbody>
                 </table>
+                <Pagination activePage={offset} totalPages={totalOperations()} onHandlePage={() => {
+                    setOffset(offset)
+                }}/>
             </main>
             {isModalOpen && (
                 <div className="modal-overlay">
                     <div className="modal">
-                        <button className="close-button" onClick={handleCloseModal}>×</button>
+                        <button className="close-button" onClick={() => setIsModalOpen(!isModalOpen)}>×</button>
                         <h2>Filter operations</h2>
                         <form onSubmit={handleModalSubmit}>
                             <div className="modal-input">
