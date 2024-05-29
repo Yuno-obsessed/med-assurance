@@ -25,6 +25,7 @@ public class Controller {
     private final AuthService authService;
     private final OperationService operationService;
     private final DoctorService doctorService;
+    private final StructureService structureService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UserDTO> getUserByID(@PathVariable(value = "id") UUID id) {
@@ -112,19 +113,35 @@ public class Controller {
     public ResponseEntity<List<OperationCardDTO>> searchOperations(
             @RequestParam(value = "doctorName", required = false) String doctorName,
             @RequestParam(value = "structureName", required = false) String structureName,
-            @RequestParam(value = "operationName", required = false) String operationName
+            @RequestParam(value = "operationName", required = false) String operationName,
+            @RequestParam(value = "offset", required = false) Integer offset,
+            @RequestParam(value = "limit", required = false) Integer limit
     ) {
         return ResponseEntity
                 .status(200)
                 .body(operationService.getAllOperationsByFilters(
-                        new OperationFilterDTO(doctorName, structureName, operationName))
+                        new OperationFilterDTO(doctorName, structureName, operationName, offset == null ? 0 : offset, limit == null ? 5 : limit))
                 );
     }
 
+    @GetMapping ("/operation/{id}")
+    public ResponseEntity<OperationDTO> getOperationByID(@PathVariable(value = "id") Integer id) {
+        return ResponseEntity
+                .status(200)
+                .body(operationService.getByID(id));
+    }
+
     @GetMapping ("/doctor/{id}")
-    public ResponseEntity<DoctorDTO> getByID(@PathVariable(value = "id") Integer id) {
+    public ResponseEntity<DoctorDTO> getDoctorByID(@PathVariable(value = "id") Integer id) {
         return ResponseEntity
                 .status(200)
                 .body(doctorService.getByID(id));
+    }
+
+    @GetMapping ("/structure/{id}")
+    public ResponseEntity<StructureDTO> getStructureByID(@PathVariable(value = "id") Integer id) {
+        return ResponseEntity
+                .status(200)
+                .body(structureService.getByID(id));
     }
 }

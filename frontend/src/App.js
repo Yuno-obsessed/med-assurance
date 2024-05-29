@@ -6,6 +6,7 @@ import RegisterPage from "./pages/register/RegisterPage";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Navigation} from "./component/Navigation";
 import {RefundPage} from "./pages/refund/RefundPage";
+import OperationsPage from "./pages/operation/OperationsPage";
 
 const App = () => {
     return (
@@ -24,6 +25,9 @@ const App = () => {
                 </Route>
                 <Route element={<PrivateRoute />}>
                     <Route path="/refund" element={<RefundPage />} />
+                </Route>
+                <Route element={<PrivateRoute />}>
+                    <Route path="/operations" element={<OperationsPage />} />
                 </Route>
             </Routes>
             </div>

@@ -23,4 +23,7 @@ public class OperationModel {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "description", columnDefinition = "text")
+    private String description;
 }

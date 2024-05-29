@@ -5,5 +5,5 @@ import sanity.nil.medassurance.db.model.StructureModel;
 
 import java.util.UUID;
 
-public interface StructureRepo extends JpaRepository<StructureModel, UUID> {
+public interface StructureRepo extends JpaRepository<StructureModel, Integer> {
 }

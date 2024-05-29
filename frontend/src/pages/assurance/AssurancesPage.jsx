@@ -83,6 +83,7 @@ const AssurancesPage = () => {
         }
         handleCloseModal();
     };
+
     return (
         <div className="assurance-page">
 
