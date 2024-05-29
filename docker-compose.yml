@@ -21,6 +21,9 @@ services:
       start_period: 10s
   backend:
     container_name: backend
+    depends_on:
+      med-db:
+        condition: service_started
     build:
       context: .
       dockerfile: Dockerfile

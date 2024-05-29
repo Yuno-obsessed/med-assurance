@@ -9,10 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import sanity.nil.medassurance.db.model.RefundModel;
 import sanity.nil.medassurance.dto.*;
 import sanity.nil.medassurance.dto.request.*;
-import sanity.nil.medassurance.service.AssuranceService;
-import sanity.nil.medassurance.service.AuthService;
-import sanity.nil.medassurance.service.RefundService;
-import sanity.nil.medassurance.service.UserService;
+import sanity.nil.medassurance.service.*;
 
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +23,8 @@ public class Controller {
     private final AssuranceService assuranceService;
     private final RefundService refundService;
     private final AuthService authService;
+    private final OperationService operationService;
+    private final DoctorService doctorService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UserDTO> getUserByID(@PathVariable(value = "id") UUID id) {
@@ -107,5 +106,25 @@ public class Controller {
         return ResponseEntity
                 .status(201)
                 .body(userService.save(createUserDTO));
+    }
+
+    @GetMapping("/operation/search")
+    public ResponseEntity<List<OperationCardDTO>> searchOperations(
+            @RequestParam(value = "doctorName", required = false) String doctorName,
+            @RequestParam(value = "structureName", required = false) String structureName,
+            @RequestParam(value = "operationName", required = false) String operationName
+    ) {
+        return ResponseEntity
+                .status(200)
+                .body(operationService.getAllOperationsByFilters(
+                        new OperationFilterDTO(doctorName, structureName, operationName))
+                );
+    }
+
+    @GetMapping ("/doctor/{id}")
+    public ResponseEntity<DoctorDTO> getByID(@PathVariable(value = "id") Integer id) {
+        return ResponseEntity
+                .status(200)
+                .body(doctorService.getByID(id));
     }
 }
