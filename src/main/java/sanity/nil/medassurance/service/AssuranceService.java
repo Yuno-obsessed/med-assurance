@@ -50,7 +50,7 @@ public class AssuranceService {
         assuranceToSave.setPercent(percent);
 
         AssuranceModel assurance = assuranceRepository.save(assuranceToSave);
-        return new AssuranceCardDTO(assurance.getType().name(),
+        return new AssuranceCardDTO(assurance.getId(), assurance.getType().name(),
                 assurance.getDurationType().name(), assurance.getPercent(), assurance.getActiveUntil());
     }
 
@@ -58,10 +58,10 @@ public class AssuranceService {
         return assuranceMapper.modelToDTO(assuranceRepository.getByID(id));
     }
 
-    public List<AssuranceCardDTO> getAll() {
+    public List<AssuranceCardDTO> getAll(Boolean active) {
         UserModel userModel = (UserModel) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        List<AssuranceModel> assurances = assuranceRepository.getAllByUserID(userModel.getId());
-        return assurances.stream().map(e -> new AssuranceCardDTO(e.getType().name(),
+        List<AssuranceModel> assurances = assuranceRepository.getAllByUserID(userModel.getId(), active);
+        return assurances.stream().map(e -> new AssuranceCardDTO(e.getId(), e.getType().name(),
                 e.getDurationType().name(), e.getPercent(), e.getActiveUntil())
         ).toList();
     }

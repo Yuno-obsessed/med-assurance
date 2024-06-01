@@ -10,5 +10,5 @@ public record DoctorDTO(
         @JsonProperty(value = "specialty")
         String specialty,
         @JsonProperty(value = "operations")
-        List<String> operationDTO
+        List<DoctorOperationDTO> operationDTO
 ) {}

@@ -1,35 +1,23 @@
 package sanity.nil.medassurance.config;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
-
-import java.util.Arrays;
-import java.util.List;
+import sanity.nil.medassurance.middleware.AuthFilter;
 
 @Configuration
 @RequiredArgsConstructor
@@ -37,6 +25,14 @@ public class SecurityConfig {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
+    private final static String[] WHILE_LIST = {
+            "/api/v1/med-ass/login",
+            "/api/v1/med-ass/register",
+            "/v3/api-docs/**",
+            "/v3/api-docs.yaml",
+            "/swagger-ui/**",
+            "/swagger-ui.html"
+    };
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -44,9 +40,8 @@ public class SecurityConfig {
                 .csrf(config -> config.disable())
                 .cors(config -> config.configurationSource(corsConfigurationSource()))
                 .authorizeHttpRequests(config -> config
-                        .requestMatchers("/api/v1/med-ass/login").permitAll()
+                        .requestMatchers(WHILE_LIST).permitAll()
                         .anyRequest().authenticated())
-//                        .anyRequest().hasAnyAuthority("ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"))
                 .sessionManagement(config -> config
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                         .maximumSessions(2)

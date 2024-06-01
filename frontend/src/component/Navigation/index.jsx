@@ -1,6 +1,6 @@
-import {Link} from "react-router-dom";
+import {NavLink} from "react-router-dom";
+import './index.css';
 import React from "react";
-import {useAuthStore} from "../../store/auth";
 
 export const Navigation = () => {
 
@@ -9,9 +9,34 @@ export const Navigation = () => {
             <h1>Medical Assurance</h1>
             <nav>
                 <ul>
-                    <li><Link to='/'>Assurance</Link></li>
-                    <li><Link to="/refund">Refunds</Link></li>
-                    <li><Link to="/operations">Available Operations</Link></li>
+                    <li>
+                        <NavLink
+                            className="link-class"
+                            to='/'
+                            exact
+                            activeClassName="active-link"
+                        >
+                            Assurance
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            className="link-class"
+                            to='/refund'
+                            activeClassName="active-link"
+                        >
+                            Refunds
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            className="link-class"
+                            to='/operations'
+                            activeClassName="active-link"
+                        >
+                            Available Operations
+                        </NavLink>
+                    </li>
                 </ul>
             </nav>
         </aside>

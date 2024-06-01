@@ -15,6 +15,10 @@ public record RefundCardDTO(
         String assuranceType,
         @JsonProperty(value = "diagnosis_name")
         String diagnosisName,
+        @JsonProperty(value = "operation_name")
+        String operationName,
+        @JsonProperty(value = "doctor_name")
+        String doctorName,
         @JsonProperty(value = "updated_at")
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
         LocalDateTime updatedAt

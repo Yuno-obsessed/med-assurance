@@ -1,4 +1,4 @@
-package sanity.nil.medassurance.config;
+package sanity.nil.medassurance.middleware;
 
 import io.jsonwebtoken.Jwt;
 import jakarta.servlet.FilterChain;
@@ -24,6 +24,7 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import sanity.nil.medassurance.config.JwtUtils;
 import sanity.nil.medassurance.db.model.RoleModel;
 
 import java.io.IOException;
@@ -42,7 +43,10 @@ public class AuthFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        if (request.getRequestURI().equals("/api/v1/med-ass/login")) {
+        if (request.getRequestURI().equals("/api/v1/med-ass/login") ||
+                request.getRequestURI().equals("/api/v1/med-ass/register") ||
+                request.getRequestURI().startsWith("/swagger-ui/") ||
+                request.getRequestURI().startsWith("/v3/api-docs")) {
             filterChain.doFilter(request, response);
             return;
         }

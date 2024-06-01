@@ -1,9 +1,12 @@
 package sanity.nil.medassurance.db.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import sanity.nil.medassurance.db.model.RefundModel;
 import sanity.nil.medassurance.db.repos.RefundRepo;
+import sanity.nil.medassurance.dto.RefundFilterDTO;
 import sanity.nil.medassurance.interfaces.RefundRepository;
 
 import java.util.List;
@@ -17,8 +20,8 @@ public class RefundRepositoryImpl implements RefundRepository {
     private final RefundRepo refundRepo;
 
     @Override
-    public UUID save(RefundModel refund) {
-        return refundRepo.save(refund).getId();
+    public RefundModel save(RefundModel refund) {
+        return refundRepo.save(refund);
     }
 
     @Override
@@ -28,7 +31,13 @@ public class RefundRepositoryImpl implements RefundRepository {
     }
 
     @Override
-    public List<RefundModel> getAllByUserID(UUID userID) {
-        return refundRepo.findAllByUserID(userID);
+    public List<RefundModel> getAllByUserID(RefundFilterDTO filters) {
+        Pageable pageable = PageRequest.of(filters.offset(), filters.limit());
+        return refundRepo.findAllByUserID(filters.userID(), pageable);
+    }
+
+    @Override
+    public int countByUserID(UUID userID) {
+        return refundRepo.countByUserID(userID);
     }
 }

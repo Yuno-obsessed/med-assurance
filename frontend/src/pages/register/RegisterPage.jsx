@@ -1,6 +1,8 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { useForm } from 'react-hook-form';
 import styled from 'styled-components';
+import {useNavigate} from "react-router-dom";
+import FloatingErrorMessage from "../../component/ErrorMessage";
 
 const Container = styled.div`
   display: flex;
@@ -35,6 +37,12 @@ const Input = styled.input`
   border-radius: 4px;
 `;
 
+const Select = styled.select`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+`;
+
 const SubmitButton = styled.button`
   grid-column: span 2;
   padding: 1rem;
@@ -53,14 +61,56 @@ const Error = styled.span`
 
 const RegisterPage = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
+    const navigate = useNavigate();
+    const [isErrorVisible, setIsErrorVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const onSubmit = data => {
+    const handleErrorClose = () => {
+        setIsErrorVisible(false);
+    };
+
+    const requestRegister = async data => {
+        const response = await fetch("http://localhost:8080/api/v1/med-ass/register", {
+            method: 'POST',
+            body: JSON.stringify({
+                first_name: data.firstName,
+                last_name: data.lastName,
+                age: data.age,
+                passport_number: data.passportNumber,
+                password: data.password,
+                email: data.email,
+                address: data.address,
+                income_type: data.incomeType,
+                children: data.children,
+                iban: data.iban,
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        if (response.ok) {
+            const data = await response.json();
+            return await data
+        } else {
+            const data = await response.json();
+            setIsErrorVisible(true);
+            setErrorMessage(data.message);
+        }
+    }
+
+    const onSubmit = (data) => {
         console.log(data);
+        requestRegister(data).then((response) => {
+            if (response) {
+                navigate('/login')
+            }
+        })
     };
 
     return (
+        <main>
         <Container>
-            <Form onSubmit={handleSubmit(onSubmit)}>
+            <Form onSubmit={handleSubmit(onSubmit)} autoComplete="off">
                 <FormControl>
                     <Label>First Name:</Label>
                     <Input {...register('firstName', { required: 'First name is required' })} />
@@ -92,6 +142,12 @@ const RegisterPage = () => {
                 </FormControl>
 
                 <FormControl>
+                    <Label>Password:</Label>
+                    <Input type="password" {...register('password', { required: 'Password is required' })} />
+                    {errors.password && <Error>{errors.password.message}</Error>}
+                </FormControl>
+
+                <FormControl>
                     <Label>Address:</Label>
                     <Input {...register('address', { required: 'Address is required' })} />
                     {errors.address && <Error>{errors.address.message}</Error>}
@@ -99,8 +155,11 @@ const RegisterPage = () => {
 
                 <FormControl>
                     <Label>Income Type:</Label>
-                    <Input {...register('incomeType', { required: 'Income type is required' })} />
-                    {errors.incomeType && <Error>{errors.incomeType.message}</Error>}
+                    <Select {...register('incomeType', { required: 'Address is required' })} >
+                        <option value="LOW">Low (600-1400$ per month)</option>
+                        <option value="MEDIUM">Medium (1400- 2400$ per month)</option>
+                        <option value="HIGH">High (2400+$ per month)</option>
+                    </Select>
                 </FormControl>
 
                 <FormControl>
@@ -126,6 +185,13 @@ const RegisterPage = () => {
                 <SubmitButton type="submit">Register</SubmitButton>
             </Form>
         </Container>
+            {isErrorVisible && (
+                <FloatingErrorMessage
+                    message={errorMessage}
+                    onClose={handleErrorClose}
+                />
+            )}
+        </main>
     );
 };
 

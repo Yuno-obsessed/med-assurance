@@ -21,15 +21,23 @@ public class OperationRepositoryImpl implements OperationRepository {
     private final OperationRepo operationRepo;
 
     @Override
-    public OperationDTO getByID(Integer id) {
-        OperationModel operation = operationRepo.findById(id)
+    public OperationModel getByID(Integer id) {
+        return operationRepo.findById(id)
                 .orElseThrow(NoSuchElementException::new);
-        return new OperationDTO(operation.getName(), operation.getDescription());
     }
 
     @Override
     public List<OperationCardDTO> findAllOperationsByFilters(OperationFilterDTO filters) {
         Pageable pageable = PageRequest.of(filters.offset(), filters.limit());
         return operationRepo.findProductsByFilters(filters.doctorName(), filters.structureName(), filters.operationName(), pageable);
+    }
+
+    public int countByFilters(OperationFilterDTO filters) {
+        return operationRepo.countByFilters(filters.doctorName(), filters.structureName(), filters.operationName());
+    }
+
+    @Override
+    public List<OperationModel> getAll() {
+        return operationRepo.getAll();
     }
 }

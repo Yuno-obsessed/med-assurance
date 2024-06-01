@@ -1,12 +1,11 @@
-package sanity.nil.medassurance.config;
+package sanity.nil.medassurance.middleware;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @Configuration
-public class LoggerConfig {
+public class LoggingFilter {
 
     @Bean
     public CommonsRequestLoggingFilter requestLoggingFilter() {

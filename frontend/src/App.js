@@ -5,9 +5,10 @@ import PrivateRoute from "./component/PrivateRoute";
 import RegisterPage from "./pages/register/RegisterPage";
 import {Navigate, Route, Routes} from "react-router-dom";
 import {Navigation} from "./component/Navigation";
-import {RefundPage} from "./pages/refund/RefundPage";
+import RefundsPage from "./pages/refund/RefundsPage";
 import OperationsPage from "./pages/operation/OperationsPage";
 import {useAuthStore} from "./store/auth";
+import DoctorPage from "./pages/doctor/DoctorPage";
 
 const App = () => {
     const {isAuth} = useAuthStore();
@@ -28,10 +29,13 @@ const App = () => {
                     <Route path="/" element={<AssurancesPage />} />
                 </Route>
                 <Route element={<PrivateRoute />}>
-                    <Route path="/refund" element={<RefundPage />} />
+                    <Route path="/refund" element={<RefundsPage />} />
                 </Route>
                 <Route element={<PrivateRoute />}>
                     <Route path="/operations" element={<OperationsPage />} />
+                </Route>
+                <Route element={<PrivateRoute />}>
+                    <Route path="/doctor/:doctorID" element={<DoctorPage />} />
                 </Route>
             </Routes>
             </div>

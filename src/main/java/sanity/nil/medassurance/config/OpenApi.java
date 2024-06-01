@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@OpenAPIDefinition(info = @Info(title = "Pet Clinic REST API", version = "3.0",
-        description = "Application used for monitoring and managing vet and pet data",
+@OpenAPIDefinition(info = @Info(title = "Medical Assurance REST API", version = "3.0",
+        description = "Application used for managing assurances and refunds data",
         contact = @Contact(name = "sanity")),
         security = {@SecurityRequirement(name = "bearerToken")}
 )

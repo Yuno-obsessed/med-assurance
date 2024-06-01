@@ -2,9 +2,9 @@ package sanity.nil.medassurance.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record OperationDTO(
-        @JsonProperty(value = "id")
-        Integer id,
+public record DoctorOperationDTO(
         @JsonProperty(value = "name")
-        String name
+        String name,
+        @JsonProperty(value = "description")
+        String description
 ) {}

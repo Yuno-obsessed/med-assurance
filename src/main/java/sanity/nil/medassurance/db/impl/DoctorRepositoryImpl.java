@@ -6,6 +6,7 @@ import sanity.nil.medassurance.db.model.DoctorModel;
 import sanity.nil.medassurance.db.repos.DoctorRepo;
 import sanity.nil.medassurance.interfaces.DoctorRepository;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
@@ -17,5 +18,10 @@ public class DoctorRepositoryImpl implements DoctorRepository {
     @Override
     public DoctorModel getByID(Integer id) {
         return doctorRepo.findById(id).orElseThrow(NoSuchElementException::new);
+    }
+
+    @Override
+    public List<DoctorModel> getByOperation(Integer id) {
+        return doctorRepo.getByOperation(id);
     }
 }

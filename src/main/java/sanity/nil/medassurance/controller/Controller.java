@@ -26,6 +26,7 @@ public class Controller {
     private final OperationService operationService;
     private final DoctorService doctorService;
     private final StructureService structureService;
+    private final DiagnosisService diagnosisService;
 
     @GetMapping("/user/{id}")
     public ResponseEntity<UserDTO> getUserByID(@PathVariable(value = "id") UUID id) {
@@ -42,10 +43,12 @@ public class Controller {
     }
 
     @GetMapping("/assurance/search")
-    public ResponseEntity<List<AssuranceCardDTO>> searchAssurances() {
+    public ResponseEntity<List<AssuranceCardDTO>> searchAssurances(
+            @RequestParam(value = "active", required = true) Boolean active
+    ) {
         return ResponseEntity
                 .status(200)
-                .body(assuranceService.getAll());
+                .body(assuranceService.getAll(active));
     }
 
     @GetMapping("/assurance")
@@ -75,17 +78,20 @@ public class Controller {
     }
 
     @PostMapping("/refund")
-    public ResponseEntity<UUID> createRefund(@RequestBody CreateRefundDTO createRefundDTO) {
+    public ResponseEntity<RefundCardDTO> createRefund(@RequestBody CreateRefundDTO createRefundDTO) {
         return ResponseEntity
                 .status(201)
                 .body(refundService.save(createRefundDTO));
     }
 
     @GetMapping("/refund/search")
-    public ResponseEntity<List<RefundCardDTO>> searchRefunds() {
+    public ResponseEntity<FilteredRefundsDTO> searchRefunds(
+            @RequestParam(value = "offset", required = false) Integer offset,
+            @RequestParam(value = "limit", required = false) Integer limit
+    ) {
         return ResponseEntity
                 .status(200)
-                .body(refundService.getAllRefundsByUser());
+                .body(refundService.getAllRefundsByUser(offset == null ? 0 : offset, limit == null ? 5 : limit));
     }
 
     @PostMapping ("/login")
@@ -110,7 +116,7 @@ public class Controller {
     }
 
     @GetMapping("/operation/search")
-    public ResponseEntity<List<OperationCardDTO>> searchOperations(
+    public ResponseEntity<FilteredOperationsDTO> searchOperations(
             @RequestParam(value = "doctorName", required = false) String doctorName,
             @RequestParam(value = "structureName", required = false) String structureName,
             @RequestParam(value = "operationName", required = false) String operationName,
@@ -122,13 +128,6 @@ public class Controller {
                 .body(operationService.getAllOperationsByFilters(
                         new OperationFilterDTO(doctorName, structureName, operationName, offset == null ? 0 : offset, limit == null ? 5 : limit))
                 );
-    }
-
-    @GetMapping ("/operation/{id}")
-    public ResponseEntity<OperationDTO> getOperationByID(@PathVariable(value = "id") Integer id) {
-        return ResponseEntity
-                .status(200)
-                .body(operationService.getByID(id));
     }
 
     @GetMapping ("/doctor/{id}")
@@ -144,4 +143,29 @@ public class Controller {
                 .status(200)
                 .body(structureService.getByID(id));
     }
+
+
+    @GetMapping ("/diagnosis")
+    public ResponseEntity<List<DiagnosisDTO>> getDiagnosis() {
+        return ResponseEntity
+                .status(200)
+                .body(diagnosisService.getAll());
+    }
+
+    @GetMapping ("/operations")
+    public ResponseEntity<List<OperationDTO>> getOperations() {
+        return ResponseEntity
+                .status(200)
+                .body(operationService.getAllOperations());
+    }
+
+    @GetMapping ("/doctors/search")
+    public ResponseEntity<List<DoctorCardDTO>> getOperations(
+            @RequestParam(value = "operationId", required = false) Integer id
+    ) {
+        return ResponseEntity
+                .status(200)
+                .body(doctorService.getByOperation(id));
+    }
+
 }

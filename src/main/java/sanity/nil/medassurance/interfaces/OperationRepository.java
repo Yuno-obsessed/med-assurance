@@ -11,7 +11,10 @@ import java.util.List;
 
 public interface OperationRepository {
 
-    OperationDTO getByID(Integer id);
+    OperationModel getByID(Integer id);
 
     List<OperationCardDTO> findAllOperationsByFilters(OperationFilterDTO filters);
+
+    int countByFilters(OperationFilterDTO filters);
+    List<OperationModel> getAll();
 }

@@ -1,12 +1,14 @@
 package sanity.nil.medassurance.interfaces;
 
 import sanity.nil.medassurance.db.model.RefundModel;
+import sanity.nil.medassurance.dto.RefundFilterDTO;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface RefundRepository {
-    UUID save(RefundModel refund);
+    RefundModel save(RefundModel refund);
     RefundModel getByID(UUID id);
-    List<RefundModel> getAllByUserID(UUID userID);
+    List<RefundModel> getAllByUserID(RefundFilterDTO filter);
+    int countByUserID(UUID userID);
 }

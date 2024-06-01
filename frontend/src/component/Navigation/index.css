@@ -1,0 +1,24 @@
+.sidebar ul {
+    width: 300px;
+    list-style-type: none;
+    padding: 0;
+}
+
+.sidebar li {
+    margin: 10px 0;
+}
+
+.sidebar h1 {
+    display:flex;
+    justify-content: center;
+}
+
+.link-class.active {
+    color: lightgray;
+    font-weight: bold
+}
+
+.link-class {
+    text-decoration: none;
+    color: white;
+}

@@ -8,5 +8,5 @@ import java.util.UUID;
 public interface AssuranceRepository {
     AssuranceModel save(AssuranceModel assurance);
     AssuranceModel getByID(UUID id);
-    List<AssuranceModel> getAllByUserID(UUID userID);
+    List<AssuranceModel> getAllByUserID(UUID userID, Boolean active);
 }

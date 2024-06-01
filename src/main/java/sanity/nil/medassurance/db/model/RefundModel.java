@@ -45,6 +45,32 @@ public class RefundModel {
     @JoinColumn(name = "diagnosis_id", referencedColumnName = "id")
     private DiagnosisModel diagnosis;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "doctorId", column = @Column(name = "doctor_id")),
+            @AttributeOverride(name = "operationId", column = @Column(name = "operation_id"))
+    })
+    private DoctorOperationKey doctorOperationKey;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @MapsId("doctorOperationKey")
+    @JoinColumns({
+            @JoinColumn(name = "doctor_id", referencedColumnName = "doctor_id", insertable = false, updatable = false),
+            @JoinColumn(name = "operation_id", referencedColumnName = "operation_id", insertable = false, updatable = false)
+    })
+    private DoctorOperationModel doctorOperation;
+
     @Column(name = "updated_at", columnDefinition = "timestamptz")
     private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onInsert() {
+        this.id = UUID.randomUUID();
+        this.updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }

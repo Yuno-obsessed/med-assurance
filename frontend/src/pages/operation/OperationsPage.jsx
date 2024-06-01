@@ -4,7 +4,7 @@ import Header from "../../component/Header";
 import fetchWrapper from "../../api/middleware/auth";
 import FloatingErrorMessage from "../../component/ErrorMessage";
 import {Link} from "react-router-dom";
-import {Pagination} from "../../component/Pagination/inedx";
+import {Pagination} from "../../component/Pagination";
 
 
 const OperationsPage = () => {
@@ -16,16 +16,12 @@ const OperationsPage = () => {
     const [isErrorVisible, setIsErrorVisible] = useState(false);
     const [operations, setOperations] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const totalOperations = ()  => {
-        if(operations.length < limit){
-            return 1;
-        }else {
-            return operations.length / limit + 1;
-        }
-    }
+    const [totalPages, setTotalPages] = useState(0);
+
    const handleErrorClose = () => {
         return setIsErrorVisible(false)
    }
+
     function constructUrl() {
         let baseUrl = 'http://localhost:8080/api/v1/med-ass/operation/search?';
         if (doctorName) {
@@ -47,10 +43,18 @@ const OperationsPage = () => {
         if(!data){
             setIsErrorVisible(true)
         }
-        setOperations(data)
+        if(!data.operations) {
+            setIsErrorVisible(true)
+        }
+        setOperations(data.operations)
+        setTotalPages(data.total_pages);
     }
-    const handleModalSubmit = async () => {
-        fetchOperation()
+
+    const handleModalSubmit = async (event) => {
+       event.preventDefault();
+       await fetchOperation();
+        setOffset(0);
+       setIsModalOpen(false)
     }
 
     useEffect(() => {
@@ -76,11 +80,12 @@ const OperationsPage = () => {
                     {operations.length > 0 ? (
                         operations.map((operation, index) => (
                             <tr key={index}>
-                                <td>
-                                    <Link to={`/structure/${operation.structure_id}`}>
-                                        {operation.structure_name}
-                                    </Link>
-                                </td>
+                                <td>{operation.structure_name}</td>
+                                {/*<td>*/}
+                                {/*    <Link to={`/structure/${operation.structure_id}`}>*/}
+                                {/*        {operation.structure_name}*/}
+                                {/*    </Link>*/}
+                                {/*</td>*/}
                                 <td>
                                     <Link to={`/doctor/${operation.doctor_id}`}>
                                         {operation.doctor_name}
@@ -97,9 +102,11 @@ const OperationsPage = () => {
                     )}
                     </tbody>
                 </table>
-                <Pagination activePage={offset} totalPages={totalOperations()} onHandlePage={() => {
-                    setOffset(offset)
+                <div style={{marginTop: 20}}>
+                <Pagination activePage={offset} totalPages={totalPages} onHandlePage={(i) => {
+                    setOffset(i)
                 }}/>
+                </div>
             </main>
             {isModalOpen && (
                 <div className="modal-overlay">

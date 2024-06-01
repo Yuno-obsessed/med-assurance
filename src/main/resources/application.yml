@@ -2,7 +2,8 @@ spring:
   application:
     name: med-assurance
   datasource:
-    url: jdbc:postgresql://med-db:5432/med-db
+    url: jdbc:postgresql://localhost:5432/med-db
+#    url: jdbc:postgresql://med-db:5432/med-db
     driver-class-name: org.postgresql.Driver
     username: sanity
     password: wordpass

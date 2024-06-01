@@ -28,7 +28,7 @@ public class AssuranceRepositoryImpl implements AssuranceRepository {
     }
 
     @Override
-    public List<AssuranceModel> getAllByUserID(UUID userID) {
-        return assuranceRepo.findAllByUserID(userID);
+    public List<AssuranceModel> getAllByUserID(UUID userID, Boolean active) {
+        return assuranceRepo.findAllByUserID(userID, active);
     }
 }

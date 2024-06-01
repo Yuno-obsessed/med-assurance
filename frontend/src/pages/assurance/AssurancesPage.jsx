@@ -4,6 +4,7 @@ import Header from "../../component/Header";
 import fetchWrapper from "../../api/middleware/auth";
 import FloatingErrorMessage from "../../component/ErrorMessage";
 import {Link} from "react-router-dom";
+import moment from "moment";
 
 
 const AssurancesPage = () => {
@@ -17,14 +18,17 @@ const AssurancesPage = () => {
     useEffect(() => {
         const fetchAssurances = async () => {
             try {
-                const data = await fetchWrapper('http://localhost:8080/api/v1/med-ass/assurance/search');
+                const data = await fetchWrapper('http://localhost:8080/api/v1/med-ass/assurance/search?active=false');
+                data.sort(function(a, b) {
+                    return moment(a.active_until, "YYYY-MM-DD hh:mm").isAfter(moment(b.active_until, "YYYY-MM-DD hh:mm")) ? -1 : 1;
+                });
                 setAssurances(data);
             } catch (error) {
                 console.error('Error fetching assurances:', error);
             }
         };
         fetchAssurances();
-    }, []);
+    }, [assurances.length]);
 
     useEffect(() => {
         if (assuranceType && durationType) {
@@ -38,7 +42,6 @@ const AssurancesPage = () => {
                     console.error('Error fetching assurance details:', error);
                 }
             };
-
             fetchAssuranceDetails();
         }
     }, [assuranceType, durationType]);
@@ -52,6 +55,15 @@ const AssurancesPage = () => {
         setActiveUntil('');
         setPrice('')
     };
+
+    const isActive = (activeUntil) => {
+        const activeDate = moment(activeUntil, "YYYY-MM-DD hh:mm");
+        if (activeDate.isValid()) {
+            return activeDate.isAfter(moment())
+        } else {
+            return false;
+        }
+    }
 
     const [isErrorVisible, setIsErrorVisible] = useState(false);
 
@@ -107,19 +119,25 @@ const AssurancesPage = () => {
                     <tbody>
                     {assurances.length > 0 ? (
                         assurances.map((assurance, index) => (
-                            <tr key={index}>
-                                {/*<td>*/}
-                                {/*    <input type="checkbox" /> {assurance.percent}*/}
-                                {/*</td>*/}
-                                <td>{assurance.active_until}</td>
-                                <td>{assurance.assurance_type}</td>
-                                <td>{assurance.duration_type}</td>
-                                <td>{assurance.percent}</td>
-                            </tr>
+                            isActive(assurance.active_until) ? (
+                                <tr key={index}>
+                                    <td>{assurance.active_until}</td>
+                                    <td>{assurance.assurance_type}</td>
+                                    <td>{assurance.duration_type}</td>
+                                    <td>{assurance.percent}</td>
+                                </tr>
+                            ) : (
+                                <tr key={index} style={{ textDecoration: "line-through", color: "darkgray" }}>
+                                    <td>{assurance.active_until}</td>
+                                    <td>{assurance.assurance_type}</td>
+                                    <td>{assurance.duration_type}</td>
+                                    <td>{assurance.percent}</td>
+                                </tr>
+                            )
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="5">No assurances found</td>
+                            <td colSpan="4">No assurances found</td>
                         </tr>
                     )}
                     </tbody>

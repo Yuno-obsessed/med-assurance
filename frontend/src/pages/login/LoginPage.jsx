@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import { useNavigate } from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
-import fetchWrapper from "../../api/middleware/auth";
 import {useUserStore} from "../../store/user";
 import FloatingErrorMessage from "../../component/ErrorMessage";
 import {useAuthStore} from "../../store/auth";
@@ -11,7 +10,7 @@ const PageContainer = styled.div`
     justify-content: center;
     align-items: center;
     height: 100vh;
-    bfackground: #f9f9f9;
+    background: #f9f9f9;
 `;
 
 const LoginContainer = styled.div`
@@ -58,11 +57,15 @@ const SubmitButton = styled.button`
     background: #6e8efb;
     color: #fff;
     font-size: 16px;
-    cursor: pointer;
     transition: background 0.3s;
+    margin-top: 10px;
     &:hover {
         background: #a777e3;
     }
+`;
+
+const RegisterDiv = styled.span`
+    margin-bottom: 20px;
 `;
 
 const LoginPage = () => {
@@ -127,6 +130,9 @@ const LoginPage = () => {
                             required
                         />
                     </FormGroup>
+                    <Link to="/register">
+                    <RegisterDiv>Don't have an account?</RegisterDiv>
+                        </Link>
                     <SubmitButton type="submit">Login</SubmitButton>
                 </form>
             </LoginContainer>

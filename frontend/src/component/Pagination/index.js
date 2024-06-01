@@ -10,10 +10,11 @@ export const Pagination = ({
 	return (
 		<div>
 			{Array.from({ length: totalPages }).map((_, index) => (
-				<button
+				<button style={{width: 50}}
 					key={index}
 					disabled={isActive(index)}
 					onClick={() => {
+						onHandlePage(index)
 					}}
 				>
 					{index + 1}

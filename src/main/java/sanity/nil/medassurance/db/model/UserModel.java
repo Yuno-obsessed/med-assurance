@@ -38,7 +38,7 @@ public class UserModel implements UserDetails {
     @Column(name = "passport_number")
     private String passportNumber;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
@@ -54,7 +54,7 @@ public class UserModel implements UserDetails {
     @Column(name = "children")
     private int children;
 
-    @Column(name = "iban")
+    @Column(name = "iban", unique = true)
     private String iban;
 
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -67,6 +67,12 @@ public class UserModel implements UserDetails {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onInsert() {
+        this.id = UUID.randomUUID();
+        this.createdAt = LocalDateTime.now();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
